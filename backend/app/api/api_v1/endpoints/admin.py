@@ -88,11 +88,13 @@ async def get_admin_dashboard(
         },
         responses={
             "total": total_responses,
-            "completed": completed_responses,
+            "active": completed_responses,  # Using completed responses as "active"
             "recent": recent_responses
         },
         questions={
-            "total": total_questions
+            "total": total_questions,
+            "active": total_questions,  # All questions are considered "active" for now
+            "recent": 0  # No recent questions tracking yet
         }
     )
 
