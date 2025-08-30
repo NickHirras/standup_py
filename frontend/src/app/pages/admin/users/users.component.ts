@@ -111,7 +111,7 @@ import { AdminService, User, UserCreate, UserUpdate, UserManagementResponse } fr
                 <div class="user-info">
                   <div class="user-name">{{ user.full_name }}</div>
                   <div class="user-email">{{ user.email }}</div>
-                  <div class="user-username" *ngIf="user.username">@{{ user.username }}</div>
+                  <div class="user-username" *ngIf="user.username">{{ '@' + user.username }}</div>
                 </div>
               </td>
             </ng-container>

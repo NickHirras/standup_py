@@ -228,7 +228,7 @@ import { AdminService, AdminDashboardStats } from '../../services/admin.service'
     <div class="activity-section" *ngIf="dashboardStats?.recent_activity">
       <h2>Recent Activity</h2>
       <div class="activity-list">
-        <div class="activity-item" *ngFor="let activity of dashboardStats.recent_activity">
+        <div class="activity-item" *ngFor="let activity of dashboardStats?.recent_activity">
           <div class="activity-icon">
             <mat-icon [class]="activity.type">{{ getActivityIcon(activity.type) }}</mat-icon>
           </div>

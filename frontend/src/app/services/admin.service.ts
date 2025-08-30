@@ -21,6 +21,32 @@ export interface AdminDashboardStats {
   ceremonies: DashboardStats;
   responses: DashboardStats;
   questions: DashboardStats;
+  
+  // Flat properties for easy access
+  total_users: number;
+  total_companies: number;
+  total_teams: number;
+  total_ceremonies: number;
+  total_integrations: number;
+  avg_participation_rate: number;
+  
+  // Growth properties
+  user_growth: number;
+  company_growth: number;
+  team_growth: number;
+  ceremony_growth: number;
+  integration_growth: number;
+  participation_change: number;
+  
+  // Additional properties
+  new_users_this_month: number;
+  total_reports_generated: number;
+  recent_activity: Array<{
+    type: string;
+    title: string;
+    description: string;
+    timestamp: string;
+  }>;
 }
 
 export interface User {

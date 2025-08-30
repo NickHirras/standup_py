@@ -560,8 +560,7 @@ export class IntegrationsComponent implements OnInit {
       skip,
       this.pageSize,
       this.filters.integration_type,
-      this.filters.is_active,
-      this.filters.search || undefined
+      this.filters.is_active
     ).subscribe({
       next: (response: IntegrationManagementResponse) => {
         this.integrations = response.integrations;
