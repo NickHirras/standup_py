@@ -258,13 +258,13 @@ The application includes sample data for testing:
 
 The database is populated with comprehensive sample data for testing:
 
-- **1 Company**: Test Company
-- **7 Users**: Admin, regular user, and 5 sample users with different roles
-- **4 Teams**: Product Development, QA, Design, and Core teams
-- **5 Questions**: Daily standup questions (short answer, multiple choice, linear scale)
-- **2 Ceremonies**: Daily Stand-up and Weekly Retrospective
-- **1 Sample Response**: Example standup response
-- **2 Chat Integrations**: Slack and Teams integrations
+- **3 Companies**: TechCorp Solutions, Startup Inc, Creative Agency
+- **11 Users**: Admin, managers, developers, designers, and specialists across companies
+- **8 Teams**: Product Development, QA, Design, DevOps, Core Development, Data Science, Design Studio, Marketing
+- **13 Questions**: Daily standup, retrospective, and planning questions with different types
+- **10 Ceremonies**: Daily stand-ups, weekly retrospectives, planning meetings, and team syncs
+- **5 Sample Responses**: Example responses from the past week
+- **4 Chat Integrations**: Slack, Teams, and Discord integrations across companies
 
 ### Development Status
 
