@@ -22,6 +22,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CeremoniesService, Ceremony, CeremonyQuestion, Question, CeremonyQuestionCreate } from '../../../services/ceremonies.service';
 import { AuthService } from '../../../services/auth.service';
 import { AddQuestionDialogComponent } from './add-question-dialog/add-question-dialog.component';
+import { EditQuestionDialogComponent } from './edit-question-dialog/edit-question-dialog.component';
 import { switchMap, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
@@ -442,8 +443,43 @@ export class CeremonyQuestionsComponent implements OnInit {
   }
 
   editQuestion(ceremonyQuestion: CeremonyQuestion): void {
-    // TODO: Implement edit question dialog
-    this.snackBar.open('Edit question functionality coming soon!', 'Close', { duration: 3000 });
+    // Find the full question details
+    const question = this.availableQuestions.find(q => q.id === ceremonyQuestion.question_id);
+    if (!question) {
+      this.snackBar.open('Question details not found', 'Close', { duration: 3000 });
+      return;
+    }
+
+    const dialogRef = this.dialog.open(EditQuestionDialogComponent, {
+      width: '600px',
+      data: {
+        ceremonyId: this.ceremony!.id,
+        ceremonyQuestion: ceremonyQuestion,
+        question: question
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Update the local data
+        const ceremonyQuestionIndex = this.ceremonyQuestions.findIndex(
+          cq => cq.question_id === ceremonyQuestion.question_id
+        );
+        if (ceremonyQuestionIndex !== -1) {
+          this.ceremonyQuestions[ceremonyQuestionIndex] = result.ceremonyQuestion;
+        }
+
+        // Update the available questions if the question itself was modified
+        if (result.question) {
+          const questionIndex = this.availableQuestions.findIndex(q => q.id === result.question.id);
+          if (questionIndex !== -1) {
+            this.availableQuestions[questionIndex] = result.question;
+          }
+        }
+
+        this.snackBar.open('Question updated successfully!', 'Close', { duration: 3000 });
+      }
+    });
   }
 
   moveQuestionUp(index: number): void {
