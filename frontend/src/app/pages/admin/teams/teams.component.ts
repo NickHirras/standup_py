@@ -16,10 +16,11 @@ import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementResponse } from '../../../services/admin.service';
+import { MatBadgeModule } from '@angular/material/badge';
+import { AdminService, Team, TeamCreate, TeamUpdate, TeamManagementResponse } from '../../../services/admin.service';
 
 @Component({
-  selector: 'app-companies',
+  selector: 'app-teams',
   standalone: true,
   imports: [
     CommonModule,
@@ -39,17 +40,18 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
     MatSnackBarModule,
     MatChipsModule,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatBadgeModule
   ],
   template: `
-    <div class="companies-header">
+    <div class="teams-header">
       <div class="header-content">
-        <h2>Company Management</h2>
-        <p>Manage system companies and their settings</p>
+        <h2>Team Management</h2>
+        <p>Manage teams, members, and team hierarchies</p>
       </div>
       <button mat-raised-button color="primary" (click)="openCreateDialog()">
-        <mat-icon>add_business</mat-icon>
-        Add Company
+        <mat-icon>group_add</mat-icon>
+        Add Team
       </button>
     </div>
 
@@ -59,8 +61,18 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
         <div class="filters-grid">
           <mat-form-field appearance="outline">
             <mat-label>Search</mat-label>
-            <input matInput [(ngModel)]="filters.search" placeholder="Search by name or domain" (input)="onFilterChange()">
+            <input matInput [(ngModel)]="filters.search" placeholder="Search by team name or description" (input)="onFilterChange()">
             <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Company</mat-label>
+            <mat-select [(ngModel)]="filters.company_id" (selectionChange)="onFilterChange()">
+              <mat-option [value]="undefined">All Companies</mat-option>
+              <mat-option *ngFor="let company of companies" [value]="company.id">
+                {{ company.name }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
@@ -75,56 +87,67 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
       </mat-card-content>
     </mat-card>
 
-    <!-- Companies Table -->
+    <!-- Teams Table -->
     <mat-card class="table-card">
       <mat-card-content>
         <div class="table-container">
-          <table mat-table [dataSource]="companies" matSort (matSortChange)="onSortChange($event)">
+          <table mat-table [dataSource]="teams" matSort (matSortChange)="onSortChange($event)">
             <!-- ID Column -->
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-              <td mat-cell *matCellDef="let company">{{ company.id }}</td>
+              <td mat-cell *matCellDef="let team">{{ team.id }}</td>
             </ng-container>
 
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Company Name</th>
-              <td mat-cell *matCellDef="let company">
-                <div class="company-info">
-                  <div class="company-name">{{ company.name }}</div>
-                  <div class="company-domain" *ngIf="company.domain">{{ company.domain }}</div>
-                  <div class="company-description" *ngIf="company.description">{{ company.description }}</div>
+            <!-- Team Info Column -->
+            <ng-container matColumnDef="team_info">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Team Information</th>
+              <td mat-cell *matCellDef="let team">
+                <div class="team-info">
+                  <div class="team-name">{{ team.name }}</div>
+                  <div class="team-description" *ngIf="team.description">{{ team.description }}</div>
+                  <div class="team-company">
+                    <mat-icon>business</mat-icon>
+                    <span>{{ getCompanyName(team.company_id) }}</span>
+                  </div>
                 </div>
               </td>
             </ng-container>
 
-            <!-- Contact Column -->
-            <ng-container matColumnDef="contact">
-              <th mat-header-cell *matHeaderCellDef>Contact Info</th>
-              <td mat-cell *matCellDef="let company">
-                <div class="contact-info">
-                  <div class="contact-item" *ngIf="company.website">
-                    <mat-icon>language</mat-icon>
-                    <a [href]="company.website" target="_blank" class="contact-link">{{ company.website }}</a>
+            <!-- Members Column -->
+            <ng-container matColumnDef="members">
+              <th mat-header-cell *matHeaderCellDef>Members</th>
+              <td mat-cell *matCellDef="let team">
+                <div class="members-info">
+                  <div class="member-count">
+                    <mat-icon>people</mat-icon>
+                    <span>{{ team.member_count || 0 }} members</span>
                   </div>
-                  <div class="contact-item" *ngIf="company.phone">
-                    <mat-icon>phone</mat-icon>
-                    <span>{{ company.phone }}</span>
-                  </div>
-                  <div class="contact-item" *ngIf="company.address">
-                    <mat-icon>location_on</mat-icon>
-                    <span>{{ company.address }}</span>
+                  <div class="manager-count" *ngIf="team.manager_count && team.manager_count > 0">
+                    <mat-icon>admin_panel_settings</mat-icon>
+                    <span>{{ team.manager_count }} managers</span>
                   </div>
                 </div>
+              </td>
+            </ng-container>
+
+            <!-- Schedule Column -->
+            <ng-container matColumnDef="schedule">
+              <th mat-header-cell *matHeaderCellDef>Work Schedule</th>
+              <td mat-cell *matCellDef="let team">
+                <div class="schedule-info" *ngIf="team.work_schedule_id">
+                  <mat-icon>schedule</mat-icon>
+                  <span>Schedule #{{ team.work_schedule_id }}</span>
+                </div>
+                <span class="no-schedule" *ngIf="!team.work_schedule_id">No schedule</span>
               </td>
             </ng-container>
 
             <!-- Status Column -->
             <ng-container matColumnDef="status">
               <th mat-header-cell *matHeaderCellDef>Status</th>
-              <td mat-cell *matCellDef="let company">
-                <span class="status-badge" [class]="company.is_active ? 'active' : 'inactive'">
-                  {{ company.is_active ? 'Active' : 'Inactive' }}
+              <td mat-cell *matCellDef="let team">
+                <span class="status-badge" [class]="team.is_active ? 'active' : 'inactive'">
+                  {{ team.is_active ? 'Active' : 'Inactive' }}
                 </span>
               </td>
             </ng-container>
@@ -132,35 +155,38 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
             <!-- Created Date Column -->
             <ng-container matColumnDef="created_at">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
-              <td mat-cell *matCellDef="let company">
-                {{ company.created_at | date:'short' }}
+              <td mat-cell *matCellDef="let team">
+                {{ team.created_at | date:'short' }}
               </td>
             </ng-container>
 
             <!-- Actions Column -->
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Actions</th>
-              <td mat-cell *matCellDef="let company">
+              <td mat-cell *matCellDef="let team">
                 <div class="action-buttons">
-                  <button mat-icon-button matTooltip="Edit Company" (click)="openEditDialog(company)">
+                  <button mat-icon-button matTooltip="Edit Team" (click)="openEditDialog(team)">
                     <mat-icon>edit</mat-icon>
                   </button>
-                  <button mat-icon-button matTooltip="View Details" (click)="viewCompany(company)">
+                  <button mat-icon-button matTooltip="View Team Details" (click)="viewTeam(team)">
                     <mat-icon>visibility</mat-icon>
+                  </button>
+                  <button mat-icon-button matTooltip="Manage Members" (click)="manageMembers(team)">
+                    <mat-icon>manage_accounts</mat-icon>
                   </button>
                   <button 
                     mat-icon-button 
-                    [matTooltip]="company.is_active ? 'Deactivate Company' : 'Activate Company'"
-                    (click)="toggleCompanyStatus(company)"
-                    [color]="company.is_active ? 'warn' : 'primary'"
+                    [matTooltip]="team.is_active ? 'Deactivate Team' : 'Activate Team'"
+                    (click)="toggleTeamStatus(team)"
+                    [color]="team.is_active ? 'warn' : 'primary'"
                   >
-                    <mat-icon>{{ company.is_active ? 'block' : 'check_circle' }}</mat-icon>
+                    <mat-icon>{{ team.is_active ? 'block' : 'check_circle' }}</mat-icon>
                   </button>
                   <button 
                     mat-icon-button 
                     color="warn" 
-                    matTooltip="Delete Company"
-                    (click)="deleteCompany(company)"
+                    matTooltip="Delete Team"
+                    (click)="deleteTeam(team)"
                   >
                     <mat-icon>delete</mat-icon>
                   </button>
@@ -175,15 +201,15 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
           <!-- Loading State -->
           <div class="loading-container" *ngIf="loading">
             <mat-spinner diameter="40"></mat-spinner>
-            <p>Loading companies...</p>
+            <p>Loading teams...</p>
           </div>
 
           <!-- No Data State -->
-          <div class="no-data-container" *ngIf="!loading && companies.length === 0">
-            <mat-icon>business_outline</mat-icon>
-            <p>No companies found</p>
+          <div class="no-data-container" *ngIf="!loading && teams.length === 0">
+            <mat-icon>groups_outline</mat-icon>
+            <p>No teams found</p>
             <button mat-raised-button color="primary" (click)="openCreateDialog()">
-              Add First Company
+              Add First Team
             </button>
           </div>
 
@@ -199,13 +225,13 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
       </mat-card-content>
     </mat-card>
 
-    <!-- Create/Edit Company Dialog -->
+    <!-- Create/Edit Team Dialog -->
     <div class="dialog-container">
       <!-- This will be replaced by actual dialog component -->
     </div>
   `,
   styles: [`
-    .companies-header {
+    .teams-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
@@ -247,37 +273,25 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
       width: 100%;
     }
 
-    .company-info {
+    .team-info {
       display: flex;
       flex-direction: column;
       gap: 4px;
     }
 
-    .company-name {
+    .team-name {
       font-weight: 500;
       color: #333;
       font-size: 1rem;
     }
 
-    .company-domain {
-      font-size: 0.875rem;
-      color: #2196f3;
-      font-family: monospace;
-    }
-
-    .company-description {
+    .team-description {
       font-size: 0.875rem;
       color: #666;
       font-style: italic;
     }
 
-    .contact-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .contact-item {
+    .team-company {
       display: flex;
       align-items: center;
       gap: 8px;
@@ -285,20 +299,53 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
       color: #666;
     }
 
-    .contact-item mat-icon {
+    .team-company mat-icon {
       font-size: 1rem;
       width: 1rem;
       height: 1rem;
       color: #999;
     }
 
-    .contact-link {
-      color: #2196f3;
-      text-decoration: none;
+    .members-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .contact-link:hover {
-      text-decoration: underline;
+    .member-count, .manager-count {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .member-count mat-icon, .manager-count mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+      color: #999;
+    }
+
+    .schedule-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: #666;
+    }
+
+    .schedule-info mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+      color: #999;
+    }
+
+    .no-schedule {
+      font-size: 0.875rem;
+      color: #999;
+      font-style: italic;
     }
 
     .status-badge {
@@ -361,7 +408,7 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
 
     /* Responsive Design */
     @media (max-width: 768px) {
-      .companies-header {
+      .teams-header {
         flex-direction: column;
         gap: 16px;
       }
@@ -379,18 +426,19 @@ import { AdminService, Company, CompanyCreate, CompanyUpdate, CompanyManagementR
         overflow-x: auto;
       }
 
-      .contact-info {
+      .team-info, .members-info {
         min-width: 200px;
       }
     }
   `]
 })
-export class CompaniesComponent implements OnInit {
+export class TeamsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  companies: Company[] = [];
-  displayedColumns: string[] = ['id', 'name', 'contact', 'status', 'created_at', 'actions'];
+  teams: Team[] = [];
+  companies: any[] = []; // Will be populated from companies endpoint
+  displayedColumns: string[] = ['id', 'team_info', 'members', 'schedule', 'status', 'created_at', 'actions'];
   
   loading = false;
   totalCount = 0;
@@ -399,6 +447,7 @@ export class CompaniesComponent implements OnInit {
   
   filters = {
     search: '',
+    company_id: undefined as number | undefined,
     is_active: undefined as boolean | undefined
   };
 
@@ -410,30 +459,48 @@ export class CompaniesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadTeams();
     this.loadCompanies();
   }
 
-  loadCompanies(): void {
+  loadTeams(): void {
     this.loading = true;
     const skip = this.currentPage * this.pageSize;
     
-    this.adminService.getCompanies(
+    this.adminService.getTeams(
       skip,
       this.pageSize,
+      this.filters.company_id,
       this.filters.is_active,
       this.filters.search || undefined
     ).subscribe({
-      next: (response: CompanyManagementResponse) => {
-        this.companies = response.companies;
+      next: (response: TeamManagementResponse) => {
+        this.teams = response.teams;
         this.totalCount = response.total_count;
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading companies:', error);
+        console.error('Error loading teams:', error);
         this.loading = false;
-        this.snackBar.open('Error loading companies', 'Close', { duration: 3000 });
+        this.snackBar.open('Error loading teams', 'Close', { duration: 3000 });
       }
     });
+  }
+
+  loadCompanies(): void {
+    this.adminService.getCompanies(0, 1000).subscribe({
+      next: (response) => {
+        this.companies = response.companies;
+      },
+      error: (error) => {
+        console.error('Error loading companies:', error);
+      }
+    });
+  }
+
+  getCompanyName(companyId: number): string {
+    const company = this.companies.find(c => c.id === companyId);
+    return company ? company.name : `Company #${companyId}`;
   }
 
   onFilterChange(): void {
@@ -441,13 +508,13 @@ export class CompaniesComponent implements OnInit {
     if (this.paginator) {
       this.paginator.firstPage();
     }
-    this.loadCompanies();
+    this.loadTeams();
   }
 
   onPageChange(event: any): void {
     this.currentPage = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.loadCompanies();
+    this.loadTeams();
   }
 
   onSortChange(event: any): void {
@@ -456,51 +523,56 @@ export class CompaniesComponent implements OnInit {
   }
 
   openCreateDialog(): void {
-    // TODO: Implement create company dialog
-    this.snackBar.open('Create company dialog will be implemented', 'Close', { duration: 2000 });
+    // TODO: Implement create team dialog
+    this.snackBar.open('Create team dialog will be implemented', 'Close', { duration: 2000 });
   }
 
-  openEditDialog(company: Company): void {
-    // TODO: Implement edit company dialog
-    this.snackBar.open(`Edit company dialog for ${company.name} will be implemented`, 'Close', { duration: 2000 });
+  openEditDialog(team: Team): void {
+    // TODO: Implement edit team dialog
+    this.snackBar.open(`Edit team dialog for ${team.name} will be implemented`, 'Close', { duration: 2000 });
   }
 
-  viewCompany(company: Company): void {
-    // TODO: Implement view company dialog
-    this.snackBar.open(`View company details for ${company.name} will be implemented`, 'Close', { duration: 2000 });
+  viewTeam(team: Team): void {
+    // TODO: Implement view team dialog
+    this.snackBar.open(`View team details for ${team.name} will be implemented`, 'Close', { duration: 2000 });
   }
 
-  toggleCompanyStatus(company: Company): void {
-    const action = company.is_active ? 'deactivate' : 'activate';
+  manageMembers(team: Team): void {
+    // TODO: Implement manage team members dialog
+    this.snackBar.open(`Manage members for ${team.name} will be implemented`, 'Close', { duration: 2000 });
+  }
+
+  toggleTeamStatus(team: Team): void {
+    const action = team.is_active ? 'deactivate' : 'activate';
     
-    if (confirm(`Are you sure you want to ${action} ${company.name}?`)) {
-      const updateData: CompanyUpdate = {
-        is_active: !company.is_active
+    if (confirm(`Are you sure you want to ${action} ${team.name}?`)) {
+      const updateData: TeamUpdate = {
+        is_active: !team.is_active
       };
 
-      this.adminService.updateCompany(company.id, updateData).subscribe({
+      this.adminService.updateTeam(team.id, updateData).subscribe({
         next: () => {
-          this.snackBar.open(`Company ${company.name} ${action}d successfully`, 'Close', { duration: 3000 });
-          this.loadCompanies();
+          this.snackBar.open(`Team ${team.name} ${action}d successfully`, 'Close', { duration: 3000 });
+          this.loadTeams();
         },
         error: (error) => {
-          console.error(`Error ${action}ing company:`, error);
-          this.snackBar.open(`Error ${action}ing company`, 'Close', { duration: 3000 });
+          console.error(`Error ${action}ing team:`, error);
+          this.snackBar.open(`Error ${action}ing team`, 'Close', { duration: 3000 });
         }
       });
     }
   }
 
-  deleteCompany(company: Company): void {
-    if (confirm(`Are you sure you want to permanently delete ${company.name}? This action cannot be undone.`)) {
-      this.adminService.deleteCompany(company.id).subscribe({
+  deleteTeam(team: Team): void {
+    if (confirm(`Are you sure you want to permanently delete ${team.name}? This action cannot be undone.`)) {
+      this.adminService.deleteTeam(team.id).subscribe({
         next: () => {
-          this.snackBar.open(`Company ${company.name} deleted successfully`, 'Close', { duration: 3000 });
-          this.loadCompanies();
+          this.snackBar.open(`Team ${team.name} deleted successfully`, 'Close', { duration: 3000 });
+          this.loadTeams();
         },
         error: (error) => {
-          console.error('Error deleting company:', error);
-          this.snackBar.open('Error deleting company', 'Close', { duration: 3000 });
+          console.error('Error deleting team:', error);
+          this.snackBar.open('Error deleting team', 'Close', { duration: 3000 });
         }
       });
     }
