@@ -150,21 +150,27 @@ interface SearchOption {
     
     .sidenav {
       width: 250px;
-      background-color: #fafafa;
+      background-color: var(--md-sys-color-surface);
+      border-right: 1px solid var(--md-sys-color-outline-variant);
     }
     
     .sidenav-content {
-      background-color: #fafafa;
+      background-color: var(--md-sys-color-surface);
     }
     
     .mat-nav-list .mat-list-item {
       margin: 4px 8px;
-      border-radius: 4px;
+      border-radius: var(--md-sys-shape-corner-medium);
+      transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
     }
     
     .mat-nav-list .mat-list-item.active {
-      background-color: #e3f2fd;
-      color: #1976d2;
+      background-color: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+    }
+    
+    .mat-nav-list .mat-list-item:hover:not(.active) {
+      background-color: var(--md-sys-color-surface-variant);
     }
     
     .mat-nav-list .mat-list-item mat-icon {
@@ -173,6 +179,7 @@ interface SearchOption {
     
     .mat-divider {
       margin: 16px 0;
+      border-color: var(--md-sys-color-outline-variant);
     }
     
     .nav-toolbar {
@@ -200,10 +207,10 @@ interface SearchOption {
     }
     
     .app-name {
-      font-size: 20px;
+      font-size: var(--md-sys-typescale-title-large-size);
       font-weight: 500;
       color: white;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.1px;
     }
     
     .search-container {
@@ -222,20 +229,27 @@ interface SearchOption {
     
     .search-field ::ng-deep .mat-mdc-text-field-wrapper {
       background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
+      border-radius: var(--md-sys-shape-corner-extra-large);
       padding: 0 16px;
+      transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    }
+    
+    .search-field ::ng-deep .mat-mdc-text-field-wrapper:hover {
+      background-color: rgba(255, 255, 255, 0.15);
     }
     
     .search-field ::ng-deep .mat-mdc-form-field-focus-overlay {
-      background-color: rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.2);
     }
     
     .search-field ::ng-deep .mat-mdc-form-field-label {
       color: rgba(255, 255, 255, 0.8);
+      font-size: var(--md-sys-typescale-label-large-size);
     }
     
     .search-field ::ng-deep .mat-mdc-input-element {
       color: white;
+      font-size: var(--md-sys-typescale-body-large-size);
     }
     
     .search-field ::ng-deep .mat-mdc-input-element::placeholder {
@@ -254,7 +268,7 @@ interface SearchOption {
     }
     
     .option-icon {
-      color: #666;
+      color: var(--md-sys-color-on-surface-variant);
       width: 20px;
       height: 20px;
     }
@@ -266,12 +280,13 @@ interface SearchOption {
     
     .option-title {
       font-weight: 500;
-      color: #333;
+      color: var(--md-sys-color-on-surface);
+      font-size: var(--md-sys-typescale-body-medium-size);
     }
     
     .option-subtitle {
-      font-size: 12px;
-      color: #666;
+      font-size: var(--md-sys-typescale-label-medium-size);
+      color: var(--md-sys-color-on-surface-variant);
       margin-top: 2px;
     }
     
@@ -282,16 +297,17 @@ interface SearchOption {
     }
     
     .user-name {
-      font-size: 14px;
+      font-size: var(--md-sys-typescale-body-medium-size);
       color: white;
+      font-weight: 500;
     }
     
     .logout-button {
-      color: #f44336;
+      color: var(--md-sys-color-error);
     }
     
     .logout-button mat-icon {
-      color: #f44336;
+      color: var(--md-sys-color-error);
     }
     
     /* Responsive adjustments */
@@ -302,7 +318,7 @@ interface SearchOption {
       }
       
       .app-name {
-        font-size: 18px;
+        font-size: var(--md-sys-typescale-title-medium-size);
       }
       
       .nav-toolbar {
@@ -320,7 +336,7 @@ interface SearchOption {
       }
       
       .app-name {
-        font-size: 16px;
+        font-size: var(--md-sys-typescale-title-small-size);
       }
     }
   `]
@@ -481,10 +497,16 @@ export class AppComponent implements OnInit, OnDestroy {
       display: flex;
       align-items: center;
       gap: 8px;
+      font-size: var(--md-sys-typescale-headline-small-size);
+      font-weight: 400;
+      color: var(--md-sys-color-on-surface);
     }
     
     mat-dialog-content {
       margin: 16px 0;
+      font-size: var(--md-sys-typescale-body-medium-size);
+      color: var(--md-sys-color-on-surface);
+      line-height: 1.5;
     }
     
     mat-dialog-actions {
@@ -493,6 +515,15 @@ export class AppComponent implements OnInit, OnDestroy {
     
     .mat-mdc-dialog-actions button {
       margin-left: 8px;
+      border-radius: var(--md-sys-shape-corner-large);
+      text-transform: none;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+    }
+    
+    .mat-mdc-dialog-actions button[color="warn"] {
+      background-color: var(--md-sys-color-error);
+      color: var(--md-sys-color-on-error);
     }
   `]
 })

@@ -1,6 +1,72 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
+/* Material Design 3 Custom Properties */
+:root {
+  /* MD3 Color System */
+  --md-sys-color-primary: #6750a4;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #eaddff;
+  --md-sys-color-on-primary-container: #21005d;
+  
+  --md-sys-color-secondary: #625b71;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #e8def8;
+  --md-sys-color-on-secondary-container: #1d192b;
+  
+  --md-sys-color-tertiary: #7d5260;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #ffd8e4;
+  --md-sys-color-on-tertiary-container: #31111d;
+  
+  --md-sys-color-error: #ba1a1a;
+  --md-sys-color-on-error: #ffffff;
+  --md-sys-color-error-container: #ffdad6;
+  --md-sys-color-on-error-container: #410002;
+  
+  --md-sys-color-surface: #fef7ff;
+  --md-sys-color-on-surface: #1c1b1f;
+  --md-sys-color-surface-variant: #e7e0ec;
+  --md-sys-color-on-surface-variant: #49454f;
+  
+  --md-sys-color-outline: #79747e;
+  --md-sys-color-outline-variant: #cac4d0;
+  
+  /* MD3 Elevation */
+  --md-sys-elevation-level0: 0px;
+  --md-sys-elevation-level1: 1px;
+  --md-sys-elevation-level2: 3px;
+  --md-sys-elevation-level3: 6px;
+  --md-sys-elevation-level4: 8px;
+  --md-sys-elevation-level5: 12px;
+  
+  /* MD3 Shape */
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  
+  /* MD3 Typography */
+  --md-sys-typescale-display-large-size: 57px;
+  --md-sys-typescale-display-medium-size: 45px;
+  --md-sys-typescale-display-small-size: 36px;
+  --md-sys-typescale-headline-large-size: 32px;
+  --md-sys-typescale-headline-medium-size: 28px;
+  --md-sys-typescale-headline-small-size: 24px;
+  --md-sys-typescale-title-large-size: 22px;
+  --md-sys-typescale-title-medium-size: 16px;
+  --md-sys-typescale-title-small-size: 14px;
+  --md-sys-typescale-body-large-size: 16px;
+  --md-sys-typescale-body-medium-size: 14px;
+  --md-sys-typescale-body-small-size: 12px;
+  --md-sys-typescale-label-large-size: 14px;
+  --md-sys-typescale-label-medium-size: 12px;
+  --md-sys-typescale-label-small-size: 11px;
+}
+
+
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -12,15 +78,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .page-title {
   margin: 0 0 8px 0;
-  font-size: 2rem;
-  font-weight: 300;
-  color: #333;
+  font-size: var(--md-sys-typescale-headline-large-size);
+  font-weight: 400;
+  color: var(--md-sys-color-on-surface);
+  line-height: 1.25;
 }
 
 .page-subtitle {
   margin: 0;
-  color: #666;
-  font-size: 1rem;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-large-size);
+  line-height: 1.5;
 }
 
 /* Common form styles */
@@ -31,6 +99,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .form-card {
   margin-bottom: 24px;
+  border-radius: var(--md-sys-shape-corner-large);
+  box-shadow: var(--md-sys-elevation-level1) 0px 1px 3px 0px, 
+              var(--md-sys-elevation-level1) 0px 1px 2px 0px;
 }
 
 .form-row {
@@ -47,11 +118,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   align-items: center;
   margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--md-sys-color-outline-variant);
 }
 
 .form-actions button {
   min-width: 120px;
+  border-radius: var(--md-sys-shape-corner-large);
+  text-transform: none;
+  font-weight: 500;
+  letter-spacing: 0.1px;
 }
 
 .form-actions button[type="submit"] {
@@ -69,6 +144,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .loading-card {
   text-align: center;
   padding: 32px;
+  border-radius: var(--md-sys-shape-corner-large);
+  background: var(--md-sys-color-surface);
+  box-shadow: var(--md-sys-elevation-level1) 0px 1px 3px 0px, 
+              var(--md-sys-elevation-level1) 0px 1px 2px 0px;
 }
 
 .loading-content {
@@ -80,7 +159,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .loading-content p {
   margin: 0;
-  color: #666;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-medium-size);
 }
 
 /* Common empty state styles */
@@ -95,6 +175,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   text-align: center;
   padding: 32px;
   max-width: 400px;
+  border-radius: var(--md-sys-shape-corner-large);
+  background: var(--md-sys-color-surface);
+  box-shadow: var(--md-sys-elevation-level1) 0px 1px 3px 0px, 
+              var(--md-sys-elevation-level1) 0px 1px 2px 0px;
 }
 
 .empty-content {
@@ -108,23 +192,26 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-size: 4rem;
   width: 4rem;
   height: 4rem;
-  color: #ccc;
+  color: var(--md-sys-color-outline-variant);
 }
 
 .empty-content h3 {
   margin: 0;
-  color: #333;
+  color: var(--md-sys-color-on-surface);
+  font-size: var(--md-sys-typescale-headline-small-size);
+  font-weight: 400;
 }
 
 .empty-content p {
   margin: 0;
-  color: #666;
+  color: var(--md-sys-color-on-surface-variant);
+  font-size: var(--md-sys-typescale-body-medium-size);
 }
 
 /* Responsive utilities */
 @media (max-width: 768px) {
   .page-title {
-    font-size: 1.5rem;
+    font-size: var(--md-sys-typescale-headline-medium-size);
   }
   
   .form-actions {
@@ -135,4 +222,43 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   .form-actions button {
     width: 100%;
   }
+}
+
+/* Material Design 3 Component Overrides */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
+  border-radius: var(--md-sys-shape-corner-large) !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1px !important;
+}
+
+.mat-mdc-card {
+  border-radius: var(--md-sys-shape-corner-large) !important;
+  box-shadow: var(--md-sys-elevation-level1) 0px 1px 3px 0px, 
+              var(--md-sys-elevation-level1) 0px 1px 2px 0px !important;
+}
+
+.mat-mdc-form-field {
+  border-radius: var(--md-sys-shape-corner-medium) !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-surface {
+  border-radius: var(--md-sys-shape-corner-large) !important;
+}
+
+.mat-mdc-snack-bar-container {
+  border-radius: var(--md-sys-shape-corner-medium) !important;
+}
+
+.mat-mdc-menu-panel {
+  border-radius: var(--md-sys-shape-corner-medium) !important;
+  box-shadow: var(--md-sys-elevation-level3) 0px 4px 8px 3px !important;
+}
+
+.mat-mdc-tooltip {
+  border-radius: var(--md-sys-shape-corner-small) !important;
+  font-size: var(--md-sys-typescale-label-medium-size) !important;
 }
