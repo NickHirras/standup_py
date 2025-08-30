@@ -7,7 +7,7 @@ from app.models.ceremony import Ceremony, CeremonyQuestion
 from app.models.team import Team, TeamMember, TeamManager
 from app.models.user import User
 from app.schemas.ceremony import (
-    CeremonyCreate, CeremonyUpdate, Ceremony, CeremonyListResponse,
+    CeremonyCreate, CeremonyUpdate, Ceremony as CeremonySchema, CeremonyListResponse,
     CeremonyQuestionCreate, CeremonyQuestionResponse
 )
 
@@ -39,7 +39,7 @@ async def get_ceremonies(
     ceremonies = query.offset(skip).limit(limit).all()
     return ceremonies
 
-@router.get("/{ceremony_id}", response_model=Ceremony)
+@router.get("/{ceremony_id}", response_model=CeremonySchema)
 async def get_ceremony(
     ceremony_id: int,
     current_user: User = Depends(get_current_user),
@@ -67,7 +67,7 @@ async def get_ceremony(
     
     return ceremony
 
-@router.post("/", response_model=Ceremony)
+@router.post("/", response_model=CeremonySchema)
 async def create_ceremony(
     ceremony_data: CeremonyCreate,
     current_user: User = Depends(get_current_user),
@@ -127,7 +127,7 @@ async def create_ceremony(
     
     return db_ceremony
 
-@router.put("/{ceremony_id}", response_model=Ceremony)
+@router.put("/{ceremony_id}", response_model=CeremonySchema)
 async def update_ceremony(
     ceremony_id: int,
     ceremony_data: CeremonyUpdate,

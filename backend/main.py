@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.api_v1.api import api_router
 from app.core.config import settings
 from app.core.database import engine, Base
-from app.models import User, Company, Team  # Import models to register them
+from app.models import *  # Import all models to register them
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
