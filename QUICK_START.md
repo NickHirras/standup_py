@@ -33,8 +33,8 @@ cp env.example .env
 # Initialize the database
 python init_db.py
 
-# Seed with sample data (optional but recommended for testing)
-python seed_db.py
+# Note: The database will be automatically initialized with test users when first run
+# No need to run seed_db.py - test accounts are created automatically
 
 # Start the backend
 python start.py
@@ -113,30 +113,44 @@ python -c "from main import app; print('App imported successfully')"
 - Ensure you're using Python 3.11+ and Node.js 18+
 - Try deleting `node_modules` and `venv` folders and reinstalling
 
+
+
 ## Sample Data
 
-The application comes with a database seeder that creates sample data for testing:
+The application automatically creates comprehensive test data when the database is first initialized:
 
 ### Sample Company
-- **Acme Software Corp** - A fictional software development company
+- **Test Company** - A test company created for development and testing purposes
 
 ### Sample Users
-- **Admin**: `admin@acme.com` / `admin123` (Full system access)
-- **Team Manager**: `sarah.manager@acme.com` / `manager123` (Can manage teams)
-- **Developer**: `john.dev@acme.com` / `dev123` (Team member)
-- **QA Engineer**: `jane.qa@acme.com` / `qa123` (Team member)
-- **Designer**: `bob.design@acme.com` / `design123` (Team member)
+- **Admin**: `admin@example.com` / `admin123` (Full system access)
+- **User**: `user@example.com` / `user123` (Regular user access)
+- **Manager**: `sarah.manager@techcorp.com` / `manager123` (Team Lead)
+- **Developer**: `john.dev@techcorp.com` / `dev123` (Software Developer)
+- **QA Engineer**: `jane.qa@techcorp.com` / `qa123` (Quality Assurance)
+- **Designer**: `bob.design@techcorp.com` / `design123` (UI/UX Designer)
+- **Product Manager**: `alice.pm@startup.com` / `pm123` (Product Management)
 
-### Sample Team
-- **Product Development Team** - Core development team with 4 members
+> **Note**: These are the default test accounts created when the database is initialized. For production use, create your own accounts through the admin panel.
 
-### Sample Ceremony
+### Sample Teams
+- **Product Development Team** - Core development team with 2 members
+- **Quality Assurance Team** - QA team with 1 member
+- **Design Team** - UI/UX design team with 1 member
+- **Core Team** - Small startup-style team with 1 member
+
+### Sample Ceremonies
 - **Daily Stand-up** - Daily team synchronization with 5 questions:
   1. What did you work on yesterday?
   2. What are you working on today?
   3. Any blockers or impediments?
-  4. How are you feeling today?
+  4. How are you feeling today? (Multiple choice: Great, Good, Okay, Struggling, Overwhelmed)
   5. What's your energy level? (1-10 scale)
+- **Weekly Retrospective** - Weekly team reflection with 3 questions
+
+### Sample Integrations
+- **Slack Integration** - Company Slack workspace
+- **Teams Integration** - Microsoft Teams workspace
 
 ## Verification
 
@@ -156,13 +170,25 @@ To verify everything is working:
    - Open http://localhost:4200 in your browser
    - You should see the StandUp application
 
+## Current Features
+
+The application currently includes:
+
+✅ **User Management**: Complete user CRUD operations with role-based access
+✅ **Company Management**: Company creation and management
+✅ **Team Management**: Team creation with members and managers
+✅ **Admin Panel**: Full administrative interface for system management
+✅ **Authentication**: JWT-based login system
+✅ **Material Design 3**: Modern, accessible UI following latest design principles
+
 ## Next Steps
 
 Once running, you can:
-1. Create your first company and admin user
-2. Set up teams and ceremonies
-3. Configure chat integrations
-4. Customize the application for your needs
+1. Login with the test accounts: `admin@example.com` / `admin123`
+2. Access the admin panel to manage users, companies, and teams
+3. Create additional users and customize the system
+4. Set up ceremonies and team structures
+5. Configure chat integrations (when implemented)
 
 ## Common Commands
 

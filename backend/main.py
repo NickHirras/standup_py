@@ -4,7 +4,17 @@ from fastapi.staticfiles import StaticFiles
 from app.api.api_v1.api import api_router
 from app.core.config import settings
 from app.core.database import engine, Base
-from app.models import *  # Import all models to register them
+
+# Import models in specific order to avoid circular dependencies
+from app.models.user import User
+from app.models.company import Company
+from app.models.team import Team, TeamMember, TeamManager
+from app.models.ceremony import Ceremony, CeremonyQuestion
+from app.models.response import CeremonyResponse, QuestionResponse, ResponseAttachment
+from app.models.question import Question, QuestionOption
+from app.models.notification import Notification, NotificationTemplate
+from app.models.chat_integration import ChatIntegration
+from app.models.work_schedule import WorkSchedule
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
