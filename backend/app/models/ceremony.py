@@ -61,20 +61,3 @@ class CeremonyQuestion(Base):
     # Relationships
     ceremony = relationship("Ceremony", back_populates="questions")
     question = relationship("Question")
-
-class CeremonyResponse(Base):
-    __tablename__ = "ceremony_responses"
-
-    id = Column(Integer, primary_key=True, index=True)
-    ceremony_id = Column(Integer, ForeignKey("ceremonies.id"), nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    question_id = Column(Integer, ForeignKey("questions.id"), nullable=False)
-    response_text = Column(Text, nullable=True)
-    response_value = Column(JSON, nullable=True)  # JSON for complex responses
-    file_url = Column(String, nullable=True)  # For file upload responses
-    submitted_at = Column(DateTime(timezone=True), server_default=func.now())
-    
-    # Relationships
-    ceremony = relationship("Ceremony", back_populates="responses")
-    user = relationship("User", back_populates="ceremony_responses")
-    question = relationship("Question")

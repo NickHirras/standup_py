@@ -19,6 +19,7 @@ class Team(Base):
     members = relationship("TeamMember", back_populates="team")
     managers = relationship("TeamManager", back_populates="team")
     ceremonies = relationship("Ceremony", back_populates="team")
+    ceremony_responses = relationship("CeremonyResponse", back_populates="team")
 
 class TeamMember(Base):
     __tablename__ = "team_members"

@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.api_v1.endpoints import auth, users, companies, teams, ceremonies, questions
+from app.api.api_v1.endpoints import auth, users, companies, teams, ceremonies, questions, responses
 
 api_router = APIRouter()
 
@@ -9,3 +9,4 @@ api_router.include_router(companies.router, prefix="/companies", tags=["companie
 api_router.include_router(teams.router, prefix="/teams", tags=["teams"])
 api_router.include_router(ceremonies.router, prefix="/ceremonies", tags=["ceremonies"])
 api_router.include_router(questions.router, prefix="/questions", tags=["questions"])
+api_router.include_router(responses.router, prefix="/responses", tags=["responses"])
