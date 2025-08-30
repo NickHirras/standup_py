@@ -104,6 +104,11 @@ import { TeamsService, Team } from '../../services/teams.service';
                 <mat-icon>quiz</mat-icon>
                 Manage Questions
               </button>
+              <button mat-button color="primary" (click)="respondToCeremony(ceremony.id)" 
+                      *ngIf="ceremony.is_active">
+                <mat-icon>rate_review</mat-icon>
+                Respond
+              </button>
               <button mat-button [color]="ceremony.is_active ? 'warn' : 'primary'" 
                       (click)="toggleCeremonyStatus(ceremony.id)">
                 <mat-icon>{{ ceremony.is_active ? 'pause' : 'play_arrow' }}</mat-icon>
@@ -359,6 +364,10 @@ export class CeremoniesComponent implements OnInit {
 
   manageQuestions(id: number): void {
     this.router.navigate(['/ceremonies', id, 'questions']);
+  }
+
+  respondToCeremony(id: number): void {
+    this.router.navigate(['/ceremonies', id, 'respond']);
   }
 
   toggleCeremonyStatus(id: number): void {

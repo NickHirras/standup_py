@@ -29,7 +29,7 @@ class CeremonyUpdate(BaseModel):
     is_active: Optional[bool] = None
     status: Optional[str] = None
 
-class CeremonyResponse(CeremonyBase):
+class Ceremony(CeremonyBase):
     id: int
     team_id: int
     is_active: bool

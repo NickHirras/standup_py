@@ -64,6 +64,11 @@ export const routes: Routes = [
         path: ':id/questions',
         loadComponent: () => import('./pages/ceremonies/ceremony-questions/ceremony-questions.component').then(m => m.CeremonyQuestionsComponent),
         canActivate: [AuthGuard]
+      },
+      {
+        path: ':id/respond',
+        loadComponent: () => import('./pages/ceremonies/ceremony-response/ceremony-response.component').then(m => m.CeremonyResponseComponent),
+        canActivate: [AuthGuard]
       }
     ]
   },
