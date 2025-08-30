@@ -119,38 +119,47 @@ python -c "from main import app; print('App imported successfully')"
 
 The application automatically creates comprehensive test data when the database is first initialized:
 
-### Sample Company
-- **Test Company** - A test company created for development and testing purposes
+### Sample Companies
+- **TechCorp Solutions** - Technology company with 6 users, 4 teams, 6 ceremonies
+- **Startup Inc** - Fintech startup with 3 users, 2 teams, 2 ceremonies
+- **Creative Agency** - Creative services company with 2 users, 2 teams, 2 ceremonies
 
 ### Sample Users
-- **Admin**: `admin@example.com` / `admin123` (Full system access)
-- **User**: `user@example.com` / `user123` (Regular user access)
+- **Admin**: `admin@techcorp.com` / `admin123` (Full system access)
 - **Manager**: `sarah.manager@techcorp.com` / `manager123` (Team Lead)
 - **Developer**: `john.dev@techcorp.com` / `dev123` (Software Developer)
 - **QA Engineer**: `jane.qa@techcorp.com` / `qa123` (Quality Assurance)
 - **Designer**: `bob.design@techcorp.com` / `design123` (UI/UX Designer)
+- **DevOps**: `mike.devops@techcorp.com` / `devops123` (Infrastructure)
 - **Product Manager**: `alice.pm@startup.com` / `pm123` (Product Management)
+- **Engineer**: `david.engineer@startup.com` / `engineer123` (Software Engineer)
+- **Data Scientist**: `emma.data@startup.com` / `data123` (Data Science)
+- **Creative Designer**: `lisa.design@creative.com` / `design123` (Creative Design)
+- **Marketer**: `tom.marketing@creative.com` / `marketing123` (Digital Marketing)
 
 > **Note**: These are the default test accounts created when the database is initialized. For production use, create your own accounts through the admin panel.
 
 ### Sample Teams
-- **Product Development Team** - Core development team with 2 members
-- **Quality Assurance Team** - QA team with 1 member
-- **Design Team** - UI/UX design team with 1 member
-- **Core Team** - Small startup-style team with 1 member
+- **TechCorp**: Product Development, QA, Design, DevOps teams
+- **Startup Inc**: Core Development, Data Science teams
+- **Creative Agency**: Design Studio, Marketing teams
 
 ### Sample Ceremonies
-- **Daily Stand-up** - Daily team synchronization with 5 questions:
+- **Daily Stand-ups** - Team synchronization with 6 questions:
   1. What did you work on yesterday?
   2. What are you working on today?
   3. Any blockers or impediments?
   4. How are you feeling today? (Multiple choice: Great, Good, Okay, Struggling, Overwhelmed)
   5. What's your energy level? (1-10 scale)
-- **Weekly Retrospective** - Weekly team reflection with 3 questions
+  6. Any wins or achievements to share?
+- **Weekly Retrospectives** - Team reflection with 4 questions
+- **Sprint Planning** - Planning meetings with 3 questions
+- **Team Syncs** - Various team synchronization meetings
 
 ### Sample Integrations
-- **Slack Integration** - Company Slack workspace
+- **Slack Integrations** - Company Slack workspaces
 - **Teams Integration** - Microsoft Teams workspace
+- **Discord Integration** - Creative agency Discord server
 
 ## Verification
 
@@ -184,7 +193,7 @@ The application currently includes:
 ## Next Steps
 
 Once running, you can:
-1. Login with the test accounts: `admin@example.com` / `admin123`
+1. Login with the test accounts: `admin@techcorp.com` / `admin123`
 2. Access the admin panel to manage users, companies, and teams
 3. Create additional users and customize the system
 4. Set up ceremonies and team structures
@@ -200,7 +209,7 @@ source venv/bin/activate && python start.py
 npm start
 
 # Initialize database
-python init_db.py
+python init_db.py  # Creates tables and comprehensive sample data
 
 # Check server status
 curl http://localhost:8000/health
