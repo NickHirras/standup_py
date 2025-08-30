@@ -23,6 +23,7 @@ import { CeremoniesService, Ceremony, CeremonyQuestion, Question, CeremonyQuesti
 import { AuthService } from '../../../services/auth.service';
 import { AddQuestionDialogComponent } from './add-question-dialog/add-question-dialog.component';
 import { EditQuestionDialogComponent } from './edit-question-dialog/edit-question-dialog.component';
+import { BulkOperationsDialogComponent } from './bulk-operations-dialog/bulk-operations-dialog.component';
 import { switchMap, forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-drop';
@@ -63,6 +64,11 @@ import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-
                   *ngIf="canManageQuestions">
             <mat-icon>add</mat-icon>
             Add Question
+          </button>
+          <button mat-raised-button color="accent" (click)="openBulkOperations()" 
+                  *ngIf="canManageQuestions">
+            <mat-icon>settings_bulk_edit</mat-icon>
+            Bulk Operations
           </button>
           <button mat-button (click)="goBack()">
             <mat-icon>arrow_back</mat-icon>
@@ -478,6 +484,35 @@ export class CeremonyQuestionsComponent implements OnInit {
         }
 
         this.snackBar.open('Question updated successfully!', 'Close', { duration: 3000 });
+      }
+    });
+  }
+
+  openBulkOperations(): void {
+    const dialogRef = this.dialog.open(BulkOperationsDialogComponent, {
+      width: '800px',
+      maxHeight: '90vh',
+      data: {
+        ceremonyId: this.ceremony!.id,
+        ceremonyQuestions: this.ceremonyQuestions,
+        availableQuestions: this.availableQuestions
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Refresh the data based on the operation type
+        switch (result.type) {
+          case 'add':
+            this.loadCeremonyQuestions();
+            break;
+          case 'templates':
+            this.loadCeremonyQuestions();
+            break;
+          case 'remove':
+            this.loadCeremonyQuestions();
+            break;
+        }
       }
     });
   }
