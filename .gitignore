@@ -436,7 +436,11 @@ deploy/
 
 # CI/CD
 .circleci/
-.github/
+.github/workflows/
 .gitlab-ci.yml
 .travis.yml
 appveyor.yml
+
+# Keep .github directory but exclude workflows
+!.github/
+.github/workflows/
