@@ -191,4 +191,9 @@ export class CeremoniesService {
   deleteQuestion(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/questions/${id}`);
   }
+
+  // Create question option
+  createQuestionOption(questionId: number, optionData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/questions/${questionId}/options`, optionData);
+  }
 }
